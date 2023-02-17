@@ -11,3 +11,14 @@
 1. npm install
 2. make .env.local
 3. npm run dev
+
+### how to set gpt config
+
+-   model: "text-davinci-003",
+    -
+-   prompt: req.body.text,
+-   temperature: 0.5,
+-   top_p: 1,
+-   frequency_penalty: 0,
+-   presence_penalty: 0,
+-   max_tokens: 256,
