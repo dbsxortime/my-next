@@ -8,6 +8,9 @@ export default function Chat() {
 	const [text, setText] = useState("");
 	const scrollRef = useRef();
 	const [isLoading, setIsLoading] = useState(false);
+	const [stack, setStack] = useState(
+		"The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly. \nYou: Hello, who are you? \nAI: I am an AI created by OpenAI. How can I help you today? "
+	);
 
 	useEffect(() => {
 		scrollRef.current.scrollIntoView({
@@ -26,24 +29,54 @@ export default function Chat() {
 			onButtonHandler();
 		}
 	};
-
 	const onButtonHandler = async () => {
-		if (text !== "")
-			setChat((prev) => {
-				setIsLoading(true);
-				return [...prev, { type: 1, text: text }];
-			});
+		if (text.replaceAll(" ", "") === "") {
+			return;
+		}
+
+		setChat((prev) => {
+			setIsLoading(true);
+			return [...prev, { type: 1, text: text }];
+		});
+
+		setStack((prev) => {
+			const value = prev + " \n\nYou: " + text + " \n\nAI: ";
+			console.log(value);
+			return value;
+		});
+
 		setText("");
+
 		const response = await fetch("/api/gpt", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ text: text }),
+			body: JSON.stringify({
+				text: stack + " \n\nYou: " + text + " \n\nAI: ",
+			}),
 		});
+
+		if (response.status === 400) {
+			setStack((prev) => {
+				const value = prev + "I don't understand. ";
+				console.log(value);
+				return value;
+			});
+			setChat((prev) => {
+				setIsLoading(false);
+				return [...prev, { type: 0, text: "에러! 다시 시도하세요." }];
+			});
+			return;
+		}
 
 		const data = await response.json();
 
+		setStack((prev) => {
+			const value = prev + data.result.choices[0].text;
+			console.log(value);
+			return value;
+		});
 		setChat((prev) => {
 			setIsLoading(false);
 			return [...prev, { type: 0, text: data.result.choices[0].text }];

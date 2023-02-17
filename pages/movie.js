@@ -53,7 +53,7 @@ export default function Moive({ results }) {
 
 export async function getServerSideProps() {
 	const { results } = await (
-		await fetch("http://0.0.0.0:3000/api/movies")
+		await fetch("http://localhost:3000/api/movies")
 	).json();
 	return {
 		props: {
