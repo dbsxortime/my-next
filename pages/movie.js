@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 export default function Moive({ results }) {
 	const router = useRouter();
-	console.log(results);
+
 	const onClick = (movie) => {
 		router.push(`/movies/${movie.title}/${movie.id}`);
 	};
@@ -21,6 +21,7 @@ export default function Moive({ results }) {
 				>
 					<img
 						src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+						alt={movie.original_title}
 					/>
 					<h4>{movie.original_title}</h4>
 				</div>
@@ -52,7 +53,7 @@ export default function Moive({ results }) {
 
 export async function getServerSideProps() {
 	const { results } = await (
-		await fetch("http://localhost:3000/api/movies")
+		await fetch("http://0.0.0.0:3000/api/movies")
 	).json();
 	return {
 		props: {
