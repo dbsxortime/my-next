@@ -11,14 +11,14 @@ export default async function handler(req, res) {
 		const completion = await openai.createCompletion({
 			model: "text-davinci-003",
 			prompt: req.body.text,
-			temperature: 0.5,
-			max_tokens: 60,
-			top_p: 1.0,
-			frequency_penalty: 0.5,
-			presence_penalty: 0,
+			temperature: 0.9,
+			max_tokens: 150,
+			top_p: 1,
+			frequency_penalty: 0.0,
+			presence_penalty: 0.6,
 			stop: [" You: ", " AI: "],
 		});
-		console.log(completion.data.choices[0].text);
+		console.log(completion.data);
 		res.status(200).json({ result: completion.data });
 	} catch {
 		res.status(400).json({ error: "error" });
