@@ -4,7 +4,7 @@ export default function Home({ results }) {
   return (
     <div className="container">
       <Seo title="Home" />
-      this is new deployed Main page!
+      New deployed Main page!!!
     </div>
   );
 }
